@@ -3,7 +3,7 @@ import { PaletteMode } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import AppAppBar from './components/AppAppBar';
-import Hero from './components/Hero';
+import Form from './components/Form';
 import getLPTheme from './getLPTheme';
 
 export const LandingPage = () => {
@@ -18,7 +18,7 @@ export const LandingPage = () => {
     <ThemeProvider theme={LPtheme}>
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
-      <Hero />
+      <Form />
     </ThemeProvider>
   );
 }

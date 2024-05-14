@@ -1,13 +1,16 @@
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
-import InputLabel from '@mui/material/InputLabel';
-import Stack from '@mui/material/Stack';
-import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+import {
+  Box,
+  Button,
+  Container,
+  InputLabel,
+  Stack,
+  TextField,
+  Typography
+} from '@mui/material';
 
 import { visuallyHidden } from '@mui/utils';
 import { styled } from '@mui/material/styles';
+import { Formik, FormikHelpers, FormikValues } from 'formik';
 
 const StyledBox = styled('div')(({ theme }) => ({
   alignSelf: 'center',
@@ -36,26 +39,23 @@ const StyledBox = styled('div')(({ theme }) => ({
   },
 }));
 
-export default function Hero() {
+export const Form = () => {
+
+  const handleSubmit = (values: FormikValues) => {
+    console.log(values);
+    
+  }
+
   return (
     <Box
       id="hero"
-      sx={(theme) => ({
-        width: '100%',
-        backgroundImage:
-          theme.palette.mode === 'light'
-            ? 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 90%), transparent)'
-            : 'radial-gradient(ellipse 80% 50% at 50% -20%, hsl(210, 100%, 16%), transparent)',
-        backgroundRepeat: 'no-repeat',
-      })}
     >
       <Container
         sx={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          pt: { xs: 14, sm: 20 },
-          pb: { xs: 8, sm: 12 },
+          justifyContent: 'center',
         }}
       >
         <Stack
@@ -101,28 +101,41 @@ export default function Hero() {
             useFlexGap
             sx={{ pt: 2, width: { xs: '100%', sm: 'auto' } }}
           >
-            <InputLabel htmlFor="email-hero" sx={visuallyHidden}>
-              YouTube Link
-            </InputLabel>
-            <TextField
-              id="email-hero"
-              hiddenLabel
-              size="small"
-              variant="outlined"
-              aria-label="Enter your email address"
-              placeholder="Your email address"
-              inputProps={{
-                autoComplete: 'off',
-                'aria-label': 'Enter your email address',
+            <Formik
+              initialValues={{
+                link: ''
               }}
-            />
-            <Button variant="contained" color="primary">
-              Download
-            </Button>
+              onSubmit={handleSubmit}>
+              {({ handleSubmit, handleChange }) => (
+                <form onSubmit={handleSubmit}>
+                  <InputLabel htmlFor="link-hero" sx={visuallyHidden}>
+                    YouTube Link
+                  </InputLabel>
+                  <TextField
+                    id="link-hero"
+                    hiddenLabel
+                    size="small"
+                    variant="outlined"
+                    aria-label="Enter your Youtube link"
+                    placeholder="Your YouTube link"
+                    name='link'
+                    onChange={handleChange}
+                    inputProps={{
+                      autoComplete: 'off',
+                      'aria-label': 'Enter your Youtube link',
+                    }}
+                    />
+                  <Button variant="contained" color="primary" type='submit'>
+                    Download
+                  </Button>
+                </form>
+              )}
+            </Formik>
           </Stack>
         </Stack>
-        <StyledBox id="image" />
       </Container>
     </Box>
   );
 }
+
+export default Form;
