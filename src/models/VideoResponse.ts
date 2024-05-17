@@ -1,6 +1,75 @@
+export interface VideoR {
+  url: string;
+  qualityLabel: string;
+  mimeType: string;
+}
+
+export interface AudioR {
+  url: string;
+  quality: string;
+  bitrate: string;
+  audioChannels: number;
+  approxDurationMs: string;
+  audioQuality: string;
+  averageBitrate: number;
+  contentLength: string;
+  mimeType: string;
+}
+
+export interface RelevantVideo {
+  videoId: string;
+  title: string;
+  thumbnails: Thumbnail[];
+  videos: VideoR[];
+  audios: AudioR[];
+}
+
+export interface Thumbnail {
+  height: number;
+  url: string;
+  width: number;
+}
+
 interface PlaybackTrack {
   baseUrl: string;
   headers: Record<"headerType", string>[]
+}
+
+export interface AdaptiveFormat {
+  approxDurationMs: string;
+  averageBitrate: number;
+  bitrate: number;
+  contentLength: string;
+  fps: number;
+  height: number;
+  indexRange: { end: string, start: string };
+  initRange:{ end: string, start: string };
+  itag: number;
+  lastModified: string;
+  mimeType: string;
+  projectionType: string;
+  quality: string;
+  qualityLabel: string;
+  url: string;
+  width: number;
+}
+
+interface Format {
+  approxDurationMs: string;
+  audioChannels: number;
+  audioQuality: string;
+  audioSampleRate: string;
+  bitrate: number;
+  fps: number;
+  height: number;
+  itag: number;
+  lastModified: string;
+  mimeType: string;
+  projectionType: string;
+  quality: string;
+  qualityLabel: string;
+  url: string;
+  width: number;
 }
 
 export interface Video {
@@ -160,5 +229,34 @@ export interface Video {
       whiteNoiseRenderEffectMode: string;
       whiteNoiseScale: number;
     }
+  },
+  responseContext: {
+    maxAgeSeconds: number;
+    visitorData: string;
+  },
+  streamingData: {
+    adaptiveFormats: AdaptiveFormat[];
+    expiresInSeconds: number;
+    formats: Format[];
+  }
+  trackingParams: string;
+  videoDetails: {
+    allowRatings: boolean;
+    author: string;
+    channelId: string;
+    isCrawlable: boolean;
+    isLiveContent: boolean;
+    isOwnerViewing: boolean;
+    isPrivate: boolean;
+    isUnpluggedCorpus: boolean;
+    keywords: string[];
+    lengthSeconds: string;
+    shortDescription: string;
+    thumbnail: {
+      thumbnails: Thumbnail[]
+    }
+    title: string;
+    videoId: string;
+    viewCount: string;
   }
 }

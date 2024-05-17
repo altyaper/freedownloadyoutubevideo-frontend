@@ -1,12 +1,18 @@
 import * as React from 'react';
-import { PaletteMode } from '@mui/material';
+import { Container, PaletteMode } from '@mui/material';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import AppAppBar from './components/AppAppBar';
-import Form from './components/Form';
-import getLPTheme from './getLPTheme';
-import { VideoInfo } from './components';
-import { Video } from './models/VideoResponse';
+import AppAppBar from './AppAppBar';
+import Form from './Form';
+import getLPTheme from '../getLPTheme';
+import { VideoInfo } from '.';
+import { Video } from '../models/VideoResponse';
+import styled from '@emotion/styled';
+
+const StyledForm = styled.div`
+  width: 50%;
+  margin: 0 auto;
+`
 
 export const LandingPage = () => {
   const [mode, setMode] = React.useState<PaletteMode>('light');
@@ -25,8 +31,18 @@ export const LandingPage = () => {
     <ThemeProvider theme={LPtheme}>
       <CssBaseline />
       <AppAppBar mode={mode} toggleColorMode={toggleColorMode} />
-      <Form onSubmit={handleOnSubmit} />
-      {video && <VideoInfo video={video as Video} />}
+      <Container sx={{
+        margin: '0 auto',
+        flexDirection: 'column',
+        alignContent: 'center',
+        textAlign: 'center',
+        marginTop: 20
+      }}>
+        <StyledForm>
+          <Form onSubmit={handleOnSubmit} />
+        </StyledForm>
+        {video && <VideoInfo video={video as Video} />}
+      </Container>
     </ThemeProvider>
   );
 }
