@@ -11,7 +11,7 @@ export const getVideoApi = async (link: string) => {
   }).then(res => res.json());
 }
 
-export const downloadVideoApi = async ({ videoLink, audioLink }: { videoLink: string, audioLink: string }) => {
+export const processVideoApi = async ({ videoLink, audioLink }: { videoLink: string, audioLink: string }) => {
   return await fetch('http://localhost:4000/api/download', {
     method: 'POST',
     headers: {
@@ -21,5 +21,14 @@ export const downloadVideoApi = async ({ videoLink, audioLink }: { videoLink: st
       videoLink,
       audioLink
     })
+  }).then(res => res.json());
+}
+
+export const downloadVideoApi = async (fileId: string) => {
+  return await fetch(`http://localhost:4000/api/download/${fileId}`, {
+    method: 'GET',
+    headers: {
+      "Content-Type": "application/json",
+    },
   }).then(res => res.json());
 }

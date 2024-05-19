@@ -4,23 +4,27 @@ export interface VideoR {
   mimeType: string;
 }
 
+export interface VideoDownload extends VideoR {
+  downloaded?: boolean;
+  fileId?: string;
+}
+
 export interface AudioR {
   url: string;
   quality: string;
-  bitrate: string;
-  audioChannels: number;
+  bitrate: number;
   approxDurationMs: string;
-  audioQuality: string;
   averageBitrate: number;
   contentLength: string;
   mimeType: string;
 }
 
+
 export interface RelevantVideo {
   videoId: string;
   title: string;
   thumbnails: Thumbnail[];
-  videos: VideoR[];
+  videos: VideoDownload[];
   audios: AudioR[];
 }
 

@@ -1,8 +1,8 @@
-import { AdaptiveFormat, RelevantVideo, Video } from "../models/VideoResponse";
+import { AdaptiveFormat, RelevantVideo, Video, VideoDownload } from "../models/VideoResponse";
 
 export const getRelevantVideoInfo = (video: Video) => {
 
-  const videos = video.streamingData.adaptiveFormats.filter((format: AdaptiveFormat) => {
+  const videos: VideoDownload[] = video.streamingData.adaptiveFormats.filter((format: AdaptiveFormat) => {
     return format.mimeType.includes('video/mp4');
   });
 

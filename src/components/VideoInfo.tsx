@@ -1,10 +1,11 @@
 import emotionStyled from "@emotion/styled";
-import { Video, VideoR } from "../models/VideoResponse";
+import { Video, VideoDownload, VideoR } from "../models/VideoResponse";
 import { Box, Button, Paper, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Typography } from "@mui/material";
 import { getRelevantVideoInfo, getTimeBySeconds } from "../utils";
-import { downloadVideoApi } from "../api";
-import React from "react";
+import { processVideoApi, downloadVideoApi } from "../api";
+import React, { SyntheticEvent, useState } from "react";
 import { Link } from "@mui/icons-material";
+import VideoRow from "./VideoRow";
 
 const VideoInfoWrapper = emotionStyled.div`
   margin-top: 70px;
@@ -56,9 +57,10 @@ function a11yProps(index: number) {
 
 export const VideoInfo = ({ video }: VideoInfoProps) => {
 
-  const [value, setValue] = React.useState(0);
+  const [value, setValue] = useState(0);
+  // const [videos, setVideos] = useState([]);
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+  const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
   
@@ -70,15 +72,16 @@ export const VideoInfo = ({ video }: VideoInfoProps) => {
     audios
   } = getRelevantVideoInfo(video);
 
-  const handleOnDownload = async (videoLink: string) => {
+  const handleOnDownload = async (video: VideoDownload) => {
     const audioLink = audios.find(a => a.mimeType === 'audio/mp4; codecs="mp4a.40.5"')?.url;
     if(!audioLink) return;
-    
-    const response = await downloadVideoApi({
-      videoLink,
+
+    const { fileId } = await processVideoApi({
+      videoLink: video.url,
       audioLink
     });
-    console.log(response);
+    
+    window.open(`http://localhost:4000/api/download/${fileId}`);
   }
 
   return (
@@ -94,7 +97,7 @@ export const VideoInfo = ({ video }: VideoInfoProps) => {
           <strong>Duration:</strong> {getTimeBySeconds(video.videoDetails.lengthSeconds)}
         </div>
         <div>
-          <a style={{ display: 'flex' }} target='_blank' href={video.streamingData.adaptiveFormats.find(v => v.qualityLabel.includes('2160p'))?.url}>
+          <a style={{ display: 'flex' }} target='_blank' href={video.streamingData.adaptiveFormats.find(v => v.qualityLabel.includes('360p'))?.url}>
             Video <Link />
           </a>
           <a style={{ display: 'flex' }} target='_blank' href={video.streamingData.adaptiveFormats.find(v => v.mimeType.includes('audio/mp4'))?.url}>
@@ -127,25 +130,8 @@ export const VideoInfo = ({ video }: VideoInfoProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {videos.map((video: VideoR) => (
-                  <TableRow
-                    key={video.url}
-                  >
-                    <TableCell component="th" scope="qualityLabel">
-                      <strong>{video.qualityLabel}</strong>
-                    </TableCell>
-                    <TableCell component="th" scope="type">
-                      <strong>{video.mimeType.split(';')[0]}</strong>
-                    </TableCell>
-                    <TableCell component="th" scope="codec">
-                      <strong>{video.mimeType.split(';')[1].split('"')[1]}</strong>
-                    </TableCell>
-                    <TableCell align="right" scope='action'>
-                      <Button variant='contained' onClick={() => handleOnDownload(video.url)}>
-                        Download
-                      </Button>
-                    </TableCell>
-                  </TableRow>
+                {videos.map((video: VideoDownload) => (
+                  <VideoRow video={video} onClickDownload={handleOnDownload} />
                 ))}
               </TableBody>
             </Table>

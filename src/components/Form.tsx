@@ -51,7 +51,7 @@ export const Form = ({ onSubmit }: FormProps) => {
       </Typography>
       <Formik
         initialValues={{
-          link: ''
+          link: 'https://www.youtube.com/watch?v=Fw3RB7xnb80'
         }}
         onSubmit={handleSubmit}>
         {({ handleSubmit, handleChange }) => (
