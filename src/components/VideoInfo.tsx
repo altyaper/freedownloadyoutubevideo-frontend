@@ -1,11 +1,12 @@
 import emotionStyled from "@emotion/styled";
-import { Video, VideoDownload, VideoR } from "../models/VideoResponse";
+import { AudioR, Video, VideoDownload, VideoR } from "../models/VideoResponse";
 import { Box, Button, Paper, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, Typography } from "@mui/material";
 import { getRelevantVideoInfo, getTimeBySeconds } from "../utils";
 import { processVideoApi, downloadVideoApi } from "../api";
 import React, { SyntheticEvent, useState } from "react";
 import { Link } from "@mui/icons-material";
 import VideoRow from "./VideoRow";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const VideoInfoWrapper = emotionStyled.div`
   margin-top: 70px;
@@ -58,7 +59,11 @@ function a11yProps(index: number) {
 export const VideoInfo = ({ video }: VideoInfoProps) => {
 
   const [value, setValue] = useState(0);
-  // const [videos, setVideos] = useState([]);
+  
+  // Queries
+  const query = useQuery({ queryKey: ['video'], queryFn: async () => await processVideoApi, enabled: false })
+  console.log(query);
+  
 
   const handleChange = (event: SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -72,7 +77,7 @@ export const VideoInfo = ({ video }: VideoInfoProps) => {
     audios
   } = getRelevantVideoInfo(video);
 
-  const handleOnDownload = async (video: VideoDownload) => {
+  const handleOnDownload = async (video: VideoDownload | AudioR) => {
     const audioLink = audios.find(a => a.mimeType === 'audio/mp4; codecs="mp4a.40.5"')?.url;
     if(!audioLink) return;
 
@@ -130,8 +135,8 @@ export const VideoInfo = ({ video }: VideoInfoProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {videos.map((video: VideoDownload) => (
-                  <VideoRow video={video} onClickDownload={handleOnDownload} />
+                {videos.map((video: VideoDownload, idx: number) => (
+                  <VideoRow key={idx} video={video} onClickDownload={handleOnDownload} />
                 ))}
               </TableBody>
             </Table>
@@ -148,18 +153,18 @@ export const VideoInfo = ({ video }: VideoInfoProps) => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {audios.map((video: VideoR) => (
+                {audios.map((audio: AudioR) => (
                   <TableRow
-                    key={video.url}
+                    key={audio.url}
                   >
-                    <TableCell component="th" scope="video">
-                      <strong>{video.qualityLabel}</strong>
+                    <TableCell component="th" scope="audio">
+                      <strong>{audio.quality}</strong>
                     </TableCell>
-                    <TableCell component="th" scope="video">
-                      <strong>{video.mimeType}</strong>
+                    <TableCell component="th" scope="audio">
+                      <strong>{audio.mimeType}</strong>
                     </TableCell>
                     <TableCell align="right">
-                      <Button variant='contained' onClick={() => handleOnDownload(video.url)}>
+                      <Button variant='contained' onClick={() => handleOnDownload(audio)}>
                         Download
                       </Button>
                     </TableCell>

@@ -8,15 +8,16 @@ import getLPTheme from '../getLPTheme';
 import { VideoInfo } from '.';
 import { Video } from '../models/VideoResponse';
 import styled from '@emotion/styled';
+import { useState } from 'react';
 
 const StyledForm = styled.div`
   width: 50%;
   margin: 0 auto;
-`
+`;
 
 export const LandingPage = () => {
-  const [mode, setMode] = React.useState<PaletteMode>('light');
-  const [video, setVideo] = React.useState <Video | null>(null);
+  const [mode, setMode] = useState<PaletteMode>('light');
+  const [video, setVideo] = useState <Video | null>(null);
   const LPtheme = createTheme(getLPTheme(mode));
 
   const toggleColorMode = () => {

@@ -23,12 +23,3 @@ export const processVideoApi = async ({ videoLink, audioLink }: { videoLink: str
     })
   }).then(res => res.json());
 }
-
-export const downloadVideoApi = async (fileId: string) => {
-  return await fetch(`http://localhost:4000/api/download/${fileId}`, {
-    method: 'GET',
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then(res => res.json());
-}
