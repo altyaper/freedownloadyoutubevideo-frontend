@@ -18,6 +18,8 @@ export const Form = ({ onSubmit }: FormProps) => {
 
   const handleSubmit = async (values: FormikValues) => {
     const videoResponse = await getVideoApi(values.link);
+    console.log(videoResponse);
+    
     onSubmit(videoResponse);
   }
 
@@ -29,7 +31,7 @@ export const Form = ({ onSubmit }: FormProps) => {
           fontSize: 'clamp(3rem, 10vw, 3.5rem)',
         }}
       >
-        YouTube
+        Free Download Youtube
         <Typography
           component="span"
           variant="h2"
@@ -39,7 +41,7 @@ export const Form = ({ onSubmit }: FormProps) => {
               theme.palette.mode === 'light' ? 'primary.main' : 'primary.light',
           }}
         >
-          do
+          Video
         </Typography>
       </Typography>
       <Typography
@@ -47,7 +49,7 @@ export const Form = ({ onSubmit }: FormProps) => {
         color="text.secondary"
         sx={{ margin: '20px 0', fontSize: 18 }}
       >
-        Paste your YouTube link and we will take care of it
+        Paste your YouTube link and we will take care of the rest
       </Typography>
       <Formik
         initialValues={{

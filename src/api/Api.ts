@@ -1,4 +1,5 @@
 import getID from 'get-youtube-id';
+import { UploadRequest } from '../components';
 
 export const getVideoApi = async (link: string) => {
   const videoId = getID(link);
@@ -11,15 +12,13 @@ export const getVideoApi = async (link: string) => {
   }).then(res => res.json());
 }
 
-export const processVideoApi = async ({ videoLink, audioLink }: { videoLink: string, audioLink: string }) => {
+export const processVideoApi = async (uploadRequest: UploadRequest | null) => {
+  if (!uploadRequest) return;
   return await fetch('http://localhost:4000/api/download', {
     method: 'POST',
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({
-      videoLink,
-      audioLink
-    })
+    body: JSON.stringify(uploadRequest)
   }).then(res => res.json());
 }

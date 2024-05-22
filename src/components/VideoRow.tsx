@@ -1,21 +1,53 @@
 import { TableCell, TableRow } from "@mui/material";
 import LoadingButton from '@mui/lab/LoadingButton';
-import { VideoDownload } from "../models/VideoResponse";
+import { AudioR, VideoDownload } from "../models/VideoResponse";
 import { useState } from "react";
-import { SplitscreenRounded } from "@mui/icons-material";
+import { useQuery } from "@tanstack/react-query";
+import { processVideoApi } from "../api";
 
 interface VideoRowProps {
   video: VideoDownload;
-  onClickDownload: (video: VideoDownload) => void;
+  audio?: AudioR;
+  title: string;
 }
 
-export const VideoRow = ({ video, onClickDownload }: VideoRowProps) => {
+export interface UploadResponse {
+  fileId: string;
+}
 
-  const [isDownloading, setIsDownloading] = useState(false);
+export interface UploadRequest {
+  title: string;
+  videoLink: string;
+  audioLink: string;
+}
 
-  const handleOnDownload = (video: VideoDownload) => {
-    setIsDownloading(true);
-    onClickDownload(video);
+export const VideoRow = ({ video, audio, title }: VideoRowProps) => {
+
+  const [shouldFetchVideo, setShouldFetchVideo] = useState(false);
+  const [videoRequest, setVideoRequest] = useState<UploadRequest | null>(null);
+
+  // Queries
+  const {
+    isFetching,
+    data,
+  } = useQuery({
+    queryKey: ["video", videoRequest],
+    queryFn: (): Promise<UploadResponse> => processVideoApi(videoRequest),
+    enabled: shouldFetchVideo
+  });
+
+  if (data?.fileId) {
+    window.open(`http://localhost:4000/api/download/${data.fileId}`);
+  }
+
+  const handleOnDownload = () => {
+    if (!audio) return;
+    setVideoRequest({
+      videoLink: video.url,
+      audioLink: audio?.url,
+      title,
+    });
+    setShouldFetchVideo(true);
   }
 
   return (
@@ -32,7 +64,7 @@ export const VideoRow = ({ video, onClickDownload }: VideoRowProps) => {
         <strong>{video.mimeType.split(';')[1].split('"')[1]}</strong>
       </TableCell>
       <TableCell align="right" scope='action'>
-        <LoadingButton loading={isDownloading} variant='contained' onClick={() => handleOnDownload(video)}>
+        <LoadingButton loading={isFetching} variant='contained' onClick={handleOnDownload}>
           Download
         </LoadingButton>
       </TableCell>
